@@ -41,7 +41,7 @@ public sealed class WindowsAuthenticationService
             return false;
         }
 
-        _logger.LogInformation("Retrieved user information. Collecting RPLOGIC groups.");
+        _logger.LogInformation("Retrieved user information. Collecting Isotralis groups.");
 
 
         //using PrincipalSearchResult<Principal>? authGroups = user.GetAuthorizationGroups();
@@ -54,11 +54,11 @@ public sealed class WindowsAuthenticationService
         }
 
         List<string> isotralisGroups = authGroups
-            .Where(static group => group.Name.StartsWith("RPLOGIC", StringComparison.OrdinalIgnoreCase))
+            .Where(static group => group.Name.StartsWith("Isotralis", StringComparison.OrdinalIgnoreCase))
             .Select(static group => group.Name)
             .ToList();
 
-        _logger.LogInformation("Detected {Count} RPLOGIC groups.", isotralisGroups.Count);
+        _logger.LogInformation("Detected {Count} Isotralis groups.", isotralisGroups.Count);
 
         userInformation = new(user.SamAccountName, user.DisplayName, isotralisGroups);
 #pragma warning restore CA1416 // Validate platform compatibility
