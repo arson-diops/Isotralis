@@ -1,0 +1,27 @@
+﻿@model int
+@{
+    (string title, string message) = Model switch
+    {
+        400 => ("Bad Request", "Your request could not be understood by the server."),
+        401 => ("Unauthorized", "You are not authorized to access this page."),
+        403 => ("Forbidden", "You do not have permission to view this page. Please contact IT if you believe this is a mistake."),
+        404 => ("Not Found", "The page you are looking for could not be found."),
+        500 => ("Internal Server Error", "An error occurred on the server. Please try again later."),
+        502 => ("Bad Gateway", "The server received an invalid response. Please try again later."),
+        503 => ("Service Unavailable", "The server is currently unavailable. Please try again later."),
+        50000 => ("Application-Specific Error", "An application-specific error occurred. This error is usually associated with attempting to access NIMS from off-network. Are you connected to the company network via GlobalProtect or the internet? Please contact IT support for assistance."),
+        _ => ("Unexpected Error", "An unexpected error occurred. If the issue persists, contact IT support.")
+    };
+
+    ViewData["Title"] = title;
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <h1 class="text-danger">@Model - @title</h1>
+            <p class="text-dark">@message</p>
+            <a href="/" class="btn btn-primary mt-3">Return to Home</a>
+        </div>
+    </div>
+</div>
