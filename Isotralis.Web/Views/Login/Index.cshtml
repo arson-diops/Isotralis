@@ -1,0 +1,86 @@
+﻿@model LoginViewModel
+
+@{
+    Layout = null;
+    ViewData["Title"] = "Login";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+        <title>@ViewData["Title"] - Isotralis</title>
+
+        <link rel="stylesheet" href="@Url.Content("~/lib/bootstrap/dist/css/bootstrap.min.css")" />
+        <link rel="stylesheet" href="@Url.Content("~/css/site.css")" asp-append-version="true" />
+        <link rel="icon" href="@Url.Content("~/img/Susquehanna.png")" />
+    </head>
+    <body>
+        <main class="container">
+            <div class="row justify-content-center align-items-center min-vh-100">
+                <div class="col-md-6 col-lg-4">
+                    <div class="card shadow-sm overflow-hidden bg-light">
+                        <div class="card-body">
+                            <h2 class="text-center mb-4">Isotralis</h2>
+
+                            <form asp-action="Index" method="post" data-is-valid="@ViewData.ModelState.IsValid" onsubmit="toggleSpinner(true)">
+                                @Html.AntiForgeryToken()
+
+                                @Html.ValidationSummary(true, string.Empty, new { @class = "text-danger" })
+
+                                <div class="form-floating mb-3">
+                                    <input asp-for="Username" class="form-control @(ViewData.ModelState.IsValid ? string.Empty : "is-invalid")" placeholder="Username" autofocus />
+                                    <label for="Username">Username</label>
+                                    @Html.ValidationMessageFor(model => model.Username, string.Empty, new { @class = "invalid-feedback" })
+                                </div>
+
+                                <div class="form-floating mb-3">
+                                    <input asp-for="Password" type="password" class="form-control @(ViewData.ModelState.IsValid ? string.Empty : "is-invalid")" placeholder="Password" />
+                                    <label for="Password">Password</label>
+                                    @Html.ValidationMessageFor(model => model.Password, string.Empty, new { @class = "invalid-feedback" })
+                                </div>
+
+                                <div class="d-grid">
+                                    <button type="submit" id="loginButton" class="btn btn-primary btn-block">
+                                        <span id="spinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                        <span id="buttonText">Login</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <script>
+            function toggleSpinner(loading) {
+                const button = document.getElementById('loginButton');
+                const spinner = document.getElementById('spinner');
+                const buttonText = document.getElementById('buttonText');
+
+                if (loading) {
+                    button.disabled = true;
+                    spinner.classList.remove('d-none');
+                    buttonText.classList.add('d-none');
+                } else {
+                    button.disabled = false;
+                    spinner.classList.add('d-none');
+                    buttonText.classList.remove('d-none');
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                const form = document.querySelector('form');
+                const isValid = form.getAttribute('data-is-valid') === "True";
+                if (isValid) {
+                    toggleSpinner(false);
+                }
+            })
+        </script>
+    </body>
+</html>
+
