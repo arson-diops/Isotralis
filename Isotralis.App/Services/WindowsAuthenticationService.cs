@@ -1,9 +1,9 @@
-﻿using Isotralis.Web.Models;
-using Isotralis.Web.Services.MockCodes;
+﻿using Isotralis.App.Services.MockCodes;
+using Isotralis.Domain.ValueObjects;
 using System.Diagnostics.CodeAnalysis;
 using System.DirectoryServices.AccountManagement;
 
-namespace Isotralis.Web.Services;
+namespace Isotralis.App.Services;
 
 public sealed class WindowsAuthenticationService
 {

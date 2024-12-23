@@ -1,4 +1,4 @@
-﻿namespace Isotralis.Web;
+﻿namespace Isotralis.App;
 
 internal static class Constants
 {

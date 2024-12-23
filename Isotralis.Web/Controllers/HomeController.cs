@@ -1,9 +1,12 @@
 using System.Diagnostics;
 using Isotralis.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Isotralis.Web.Controllers
 {
+    [Authorize(Roles = Constants.GeneralUserRole + "," + Constants.TechnicianUserRole + "," + Constants.SupervisorUserRole)]
+    [Route("[controller]/[action]")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -15,7 +18,19 @@ namespace Isotralis.Web.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            _logger.LogDebug("Entered GET HomeController::Index");
+
+            LandingPageModel model = new()
+            {
+                Cards =
+                [
+                    new CardModel("Document a Sample", "Complete radiological samples from the air, ground, or otherwise.", "Index", "Home", "Sample"),
+                    new CardModel("Document a Survey", "Create, edit, and manage radiological surveys.", "Index", "Home", "Survey"),
+                    new CardModel("Review Radiological Documents", "Review and moderate radiological surveys and samples.", "Index", "Home", "Review")
+                ]
+            };
+
+            return View(model);
         }
 
         public IActionResult Privacy()

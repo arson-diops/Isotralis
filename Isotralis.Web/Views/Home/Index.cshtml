@@ -1,8 +1,21 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model LandingPageModel
+@{
+    ViewData["Title"] = "Landing Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+@section Styles {
+    <link rel="stylesheet" href="@Url.Content("~/css/landing.css")" />
+}
+
+<div class="text-center my-3 text-black">
+    <h1 class="display-4">Welcome to RPLOGIC</h1>
+
+    <p class="lead">Radiation Protection Logistics &amp; Inventory</p>
+</div>
+
+<div class="row mb-lg-4">
+    @foreach (CardModel card in Model.Cards)
+    {
+        await Html.RenderPartialAsync("_NavigationCard", card);
+    }
 </div>

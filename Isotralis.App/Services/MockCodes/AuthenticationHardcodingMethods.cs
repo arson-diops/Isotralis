@@ -1,6 +1,6 @@
 ﻿using System.DirectoryServices.AccountManagement;
 
-namespace Isotralis.Web.Services.MockCodes;
+namespace Isotralis.App.Services.MockCodes;
 
 #pragma warning disable CA1416 // Validate platform compatibility
 
@@ -53,8 +53,15 @@ public class MockPrincipalContext : IDisposable
     public bool ValidateCredentials(string username, string password)
     {
         Console.WriteLine($"Validating credentials for user: {username}");
-        // Simulate credential validation (hardcoded)
-        return username == "TestUser" && password == "TestPassword";
+
+        // Use switch to handle multiple users
+        return username switch
+        {
+            "E210601" when password == "Password" => true,
+            "E03994" when password == "Password" => true,
+            "E202020" when password == "Password" => true,
+            _ => false
+        };
     }
 
     public void Dispose()
@@ -82,18 +89,30 @@ public class MockUserPrincipal : IDisposable
     public static MockUserPrincipal FindByIdentity(MockPrincipalContext context, string username)
     {
         Console.WriteLine($"Retrieving user information for: {username}");
-        // Simulate user retrieval (hardcoded)
-        if (username == "TestUser")
-        {
-            return new MockUserPrincipal(
-                samAccountName: "TestSAM",
-                userName: "TestUser",
-                displayName: "TestDisplay",
-                emailAddress: "bdurange0525@gmail.com"
-            );
-        }
 
-        throw new InvalidOperationException($"User {username} not found.");
+        // Use switch to handle multiple users
+        return username switch
+        {
+            "E210601" => new MockUserPrincipal(
+                samAccountName: "E210601",
+                userName: "E210601",
+                displayName: "Benjamin Durange",
+                emailAddress: "bdurange0525@gmail.com"
+            ),
+            "E03994" => new MockUserPrincipal(
+                samAccountName: "E03994",
+                userName: "E03994",
+                displayName: "Louis Durange",
+                emailAddress: "bdurange0525@gmail.com"
+            ),
+            "E202020" => new MockUserPrincipal(
+                samAccountName: "E202020",
+                userName: "E202020",
+                displayName: "Mike Butler",
+                emailAddress: "bdurange0525@gmail.com"
+            ),
+            _ => throw new InvalidOperationException($"User {username} not found.")
+        };
     }
 
     public void Dispose()
