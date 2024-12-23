@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Isotralis.Web.Models;
-using Isotralis.Web.Services;
+using Isotralis.Domain.ValueObjects;
+using Isotralis.App.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -57,14 +58,37 @@ public sealed class LoginController : Controller
 
         _logger.LogInformation("Successfully authenticated user '{Username}'. Creating authentication cookie.", model.Username);
 
+#if DEBUG
+        var userRoles = new Dictionary<string, string[]>
+    {
+        { "E210601", new[] { Constants.GeneralUserRole } },
+        { "E202020", new[] { Constants.SupervisorUserRole } },
+        { "E03994", new[] { Constants.TechnicianUserRole } }
+    };
+
+        var roles = userRoles.TryGetValue(userInformation.Username, out var userSpecificRoles)
+        ? userSpecificRoles
+        : Array.Empty<string>();
+#endif
+
+#if !DEBUG
         Claim[] claims = 
         [
             new(ClaimTypes.NameIdentifier, userInformation.Username),
-            new(ClaimTypes.Name, userInformation.Name), 
-            new(ClaimTypes.Role, Constants.TechnicianUserRole),
-            new(ClaimTypes.Role, Constants.GeneralUserRole),
+            new(ClaimTypes.Name, userInformation.Name),
             ..userInformation.Roles.Select(static g => new Claim(ClaimTypes.Role, g))
         ];
+#endif
+#if DEBUG
+        // Create claims
+        Claim[] claims = new[]
+        {
+        new Claim(ClaimTypes.NameIdentifier, userInformation.Username),
+        new Claim(ClaimTypes.Name, userInformation.Name)
+    }
+        .Concat(roles.Select(role => new Claim(ClaimTypes.Role, role)))
+        .ToArray();
+#endif
 
         ClaimsIdentity identity = new(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 

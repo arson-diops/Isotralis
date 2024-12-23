@@ -1,0 +1,15 @@
+﻿@model CardModel
+
+<div class="col-12 col-sm-6 col-md-4 mb-sm-2 card-container">
+    <a href="@Url.Action(Model.Action, Model.Controller, new { area = Model.Area })" class="text-decoration-none">
+        <div class="card bg-light shadow-sm h-100">
+            <div class="card-header text-center bg-primary text-white">
+                @Model.Title
+            </div>
+
+            <div class="card-body text-center">
+                <p class="card-text text-muted">@Model.Description</p>
+            </div>
+        </div>
+    </a>
+</div>

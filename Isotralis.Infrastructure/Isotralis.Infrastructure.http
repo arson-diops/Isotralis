@@ -1,0 +1,6 @@
+@Isotralis.Infrastructure_HostAddress = http://localhost:5197
+
+GET {{Isotralis.Infrastructure_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

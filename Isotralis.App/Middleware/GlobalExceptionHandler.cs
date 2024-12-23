@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Oracle.ManagedDataAccess.Client;
 
-namespace Isotralis.Web.Middleware;
+namespace Isotralis.App.Middleware;
 
 public sealed class GlobalExceptionHandler : IExceptionHandler
 {

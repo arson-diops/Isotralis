@@ -1,7 +1,8 @@
-using Isotralis.Web.Middleware;
-using Isotralis.Web.Services;
+using Isotralis.App.Middleware;
+using Isotralis.App.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.DataProtection;
 using NLog;
 using NLog.Web;
 using Oracle.ManagedDataAccess.Client;
