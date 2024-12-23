@@ -2,13 +2,13 @@
 using Microsoft.AspNetCore.Http;
 using Oracle.ManagedDataAccess.Client;
 
-namespace Isotralis.Infrastructure.Repositories;
+namespace Isotralis.Infrastructure.Repositories.Nims;
 
-public abstract class BaseRepository
+public abstract class NimsBaseRepository
 {
     private protected readonly string ConnectionString;
 
-    private protected BaseRepository(string? connectionString)
+    private protected NimsBaseRepository(string? connectionString)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
         ConnectionString = connectionString;

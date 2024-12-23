@@ -1,6 +1,6 @@
 @Isotralis.Infrastructure_HostAddress = http://localhost:5197
 
-GET {{Isotralis.Infrastructure_HostAddress}}/weatherforecast/
+GET {{Isotralis.Infrastructure_HostAddress}}/person/
 Accept: application/json
 
 ###
