@@ -5,5 +5,6 @@ public record CardModel(
     string Description,
     string? Action = null,
     string? Controller = null,
-    string? Area = null
+    string? Area = null,
+    string? PermissionLevel = null
     );
