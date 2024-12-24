@@ -38,4 +38,12 @@ public class PersonController : ControllerBase
         Person? person = await _nimsPersonsRepository.GetPersonByPerDbIdAsync(perDbId);
         return Ok(person);
     }
+
+    [HttpGet("{nimsUserId}", Name = "GetPersonByNimsUserId")]
+    public async Task<IActionResult> GetPersonByNimsUserIdAsync([FromQuery] string nimsUserId)
+    {
+        Person? person = await _nimsPersonsRepository.GetPersonByNimsUserIdAsync(nimsUserId);
+        Console.WriteLine("Hello World!");
+        return Ok(person);
+    }
 }

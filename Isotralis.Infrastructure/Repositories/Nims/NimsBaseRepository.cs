@@ -1,12 +1,13 @@
 ﻿using Dapper;
-using Microsoft.AspNetCore.Http;
 using Oracle.ManagedDataAccess.Client;
+using NLog;
 
 namespace Isotralis.Infrastructure.Repositories.Nims;
 
 public abstract class NimsBaseRepository
 {
     private protected readonly string ConnectionString;
+    private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
     private protected NimsBaseRepository(string? connectionString)
     {
@@ -22,53 +23,52 @@ public abstract class NimsBaseRepository
             await connection.OpenAsync(cancellationToken);
             return connection;
         }
-        catch (OracleException ex) when (ex.Number == 50000)
+        catch (OracleException ex)
         {
-            // Log the error and rethrow for handling elsewhere
-            Console.WriteLine($"OracleException occurred: {ex.Message}");
-            throw new InvalidOperationException("An application-specific error occurred (ORA-50000).", ex);
+            Logger.Error(ex, "Database connection error: {Message}", ex.Message);
+            throw new RepositoryException("Failed to establish a database connection.", ex);
         }
     }
 
     internal async Task<IEnumerable<T>> GetQueryResultsAsync<T>(CommandDefinition cmdDefinition)
     {
-        await using OracleConnection connection = await GetOpenConnectionAsync(cmdDefinition.CancellationToken);
-
-        return await connection.QueryAsync<T>(cmdDefinition);
+        try
+        {
+            await using OracleConnection connection = await GetOpenConnectionAsync(cmdDefinition.CancellationToken);
+            return await connection.QueryAsync<T>(cmdDefinition);
+        }
+        catch (OracleException ex)
+        {
+            Logger.Error(ex, "Query execution error: {CommandText}", cmdDefinition.CommandText);
+            throw new RepositoryException("Failed to execute query.", ex);
+        }
     }
 
     internal async Task<T?> GetSingleQueryResultAsync<T>(CommandDefinition cmdDefinition)
     {
-        await using OracleConnection connection = await GetOpenConnectionAsync(cmdDefinition.CancellationToken);
-
-        return await connection.QuerySingleOrDefaultAsync<T>(cmdDefinition);
-    }
-
-    internal async Task<T?> GetFirstQueryResultAsync<T>(CommandDefinition cmdDefinition)
-    {
-        await using OracleConnection connection = await GetOpenConnectionAsync(cmdDefinition.CancellationToken);
-
-        return await connection.QueryFirstOrDefaultAsync<T>(cmdDefinition);
+        try
+        {
+            await using OracleConnection connection = await GetOpenConnectionAsync(cmdDefinition.CancellationToken);
+            return await connection.QuerySingleOrDefaultAsync<T>(cmdDefinition);
+        }
+        catch (OracleException ex)
+        {
+            Logger.Error(ex, "Single query execution error: {CommandText}", cmdDefinition.CommandText);
+            throw new RepositoryException("Failed to retrieve a single query result.", ex);
+        }
     }
 
     internal async Task<int> ExecuteNonQueryAsync(CommandDefinition cmdDefinition)
     {
-        await using OracleConnection connection = await GetOpenConnectionAsync(cmdDefinition.CancellationToken);
-
-        return await connection.ExecuteAsync(cmdDefinition);
-    }
-
-    internal async Task<IEnumerable<TReturn>> GetQueryResultsWithJoinsAsync<TReturn, TSecond>(CommandDefinition cmdDefinition, Func<TReturn, TSecond, TReturn> mapFunction, string splitOn)
-    {
-        await using OracleConnection connection = await GetOpenConnectionAsync(cmdDefinition.CancellationToken);
-
-        return await connection.QueryAsync(cmdDefinition, mapFunction, splitOn);
-    }
-
-    internal async Task<IEnumerable<TReturn>> GetQueryResultsWithJoinsAsync<TReturn, TSecond, TThird>(CommandDefinition cmdDefinition, Func<TReturn, TSecond, TThird, TReturn> mapFunction, IEnumerable<string> splitOns)
-    {
-        await using OracleConnection connection = await GetOpenConnectionAsync(cmdDefinition.CancellationToken);
-
-        return await connection.QueryAsync(cmdDefinition, mapFunction, string.Join(',', splitOns));
+        try
+        {
+            await using OracleConnection connection = await GetOpenConnectionAsync(cmdDefinition.CancellationToken);
+            return await connection.ExecuteAsync(cmdDefinition);
+        }
+        catch (OracleException ex)
+        {
+            Logger.Error(ex, "Non-query execution error: {CommandText}", cmdDefinition.CommandText);
+            throw new RepositoryException("Failed to execute a non-query command.", ex);
+        }
     }
 }

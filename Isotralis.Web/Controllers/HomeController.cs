@@ -24,9 +24,9 @@ namespace Isotralis.Web.Controllers
             {
                 Cards =
                 [
-                    new CardModel("Document a Sample", "Complete radiological samples from the air, ground, or otherwise.", "Index", "Home", "Sample"),
-                    new CardModel("Document a Survey", "Create, edit, and manage radiological surveys.", "Index", "Home", "Survey"),
-                    new CardModel("Review Radiological Documents", "Review and moderate radiological surveys and samples.", "Index", "Home", "Review")
+                    new CardModel("Document a Sample", "Complete radiological samples from the air, ground, or otherwise.", "Index", "Home", "Sample", Constants.GeneralUserRole),
+                    new CardModel("Document a Survey", "Create, edit, and manage radiological surveys.", "Index", "Home", "Survey", Constants.GeneralUserRole),
+                    new CardModel("Review Radiological Documents", "Review and moderate radiological surveys and samples.", "Index", "Home", "Review", Constants.SupervisorUserRole)
                 ]
             };
 

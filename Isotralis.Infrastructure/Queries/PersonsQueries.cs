@@ -34,4 +34,16 @@ public static class PersonsQueries
         FROM nims.person_aliases
         WHERE per_db_id = :perDbId
         ";
+
+    public const string GetPersonByNimsUserId = @"
+        SELECT 
+            per_db_id AS PersonId,
+            first_name AS FirstName,
+            last_name AS LastName,
+            middle_initial AS MiddleInitial,
+            name AS NimsName,
+            site_badge AS SiteBadgeNumber
+        FROM nims.persons
+        WHERE nims_user_id = :nimsUserId
+        ";
 }

@@ -8,14 +8,17 @@
 }
 
 <div class="text-center my-3 text-black">
-    <h1 class="display-4">Welcome to RPLOGIC</h1>
+    <h1 class="display-4">Welcome to Isotralis</h1>
 
-    <p class="lead">Radiation Protection Logistics &amp; Inventory</p>
+    <p class="lead">I dont fucking know yet</p>
 </div>
 
 <div class="row mb-lg-4">
     @foreach (CardModel card in Model.Cards)
     {
-        await Html.RenderPartialAsync("_NavigationCard", card);
+        @if (card.PermissionLevel != null &&  User.IsInRole(card.PermissionLevel))
+        {
+            await Html.RenderPartialAsync("_NavigationCard", card);
+        }
     }
 </div>

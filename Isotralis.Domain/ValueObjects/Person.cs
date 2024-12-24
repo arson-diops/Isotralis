@@ -14,5 +14,7 @@ public sealed record Person
 
     public int SiteBadgeNumber { get; init; }
 
+    public string? NimsUserId { get; init; }
+
     public List<PersonAlias> Aliases { get; set; } = [];
 }
